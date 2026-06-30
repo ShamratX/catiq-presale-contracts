@@ -4,22 +4,40 @@ Smart contract system for the **CatIQ** token and its **BNB-based public presale
 
 ---
 
+## Features
+
+- **Fixed-supply ERC-20 token** — 1 billion CIQ minted once at deploy across six allocation wallets; no additional minting
+- **BNB presale** — participants buy CIQ with native BNB during a configurable sale window
+- **Chainlink oracle pricing** — live BNB/USD conversion with staleness checks (max 1 hour)
+- **Three-stage pricing** — owner can switch between tier 1, 2, and 3 USD prices during the sale
+- **TGE claim model** — purchases are credited on-chain; tokens are claimed after Token Generation Event
+- **Off-chain payment support** — USDT, USDC, and ETH sales recorded via owner batch allocation after sale end
+- **Admin toolkit** — update sale window, TGE, stage prices, withdraw BNB, recover unsold CIQ, finalize sale
+- **Buy quote preview** — on-chain quote for BNB → CIQ before purchase (frontend-friendly)
+- **Reentrancy protection** — guarded buy and claim paths
+- **BscScan-ready deployment** — deploy scripts print verify commands; constructor arg helpers included
+- **Full test coverage** — Hardhat suites for token supply, presale flow, claims, and admin actions
+- **BSC mainnet & testnet** — Hardhat networks preconfigured for Binance Smart Chain
+
+---
+
 ## Table of Contents
 
-1. [Project Overview](#project-overview)
-2. [Architecture](#architecture)
-3. [Repository Structure](#repository-structure)
-4. [Tokenomics](#tokenomics)
-5. [Contract Responsibilities](#contract-responsibilities)
-6. [Presale Lifecycle](#presale-lifecycle)
-7. [Pricing & Oracle](#pricing--oracle)
-8. [Admin Controls](#admin-controls)
-9. [Deployment Order](#deployment-order)
-10. [Configuration](#configuration)
-11. [Networks](#networks)
-12. [Testing](#testing)
-13. [Operational Checklist](#operational-checklist)
-14. [Security Notes](#security-notes)
+1. [Features](#features)
+2. [Project Overview](#project-overview)
+3. [Architecture](#architecture)
+4. [Repository Structure](#repository-structure)
+5. [Tokenomics](#tokenomics)
+6. [Contract Responsibilities](#contract-responsibilities)
+7. [Presale Lifecycle](#presale-lifecycle)
+8. [Pricing & Oracle](#pricing--oracle)
+9. [Admin Controls](#admin-controls)
+10. [Deployment Order](#deployment-order)
+11. [Configuration](#configuration)
+12. [Networks](#networks)
+13. [Testing](#testing)
+14. [Operational Checklist](#operational-checklist)
+15. [Security Notes](#security-notes)
 
 ---
 
