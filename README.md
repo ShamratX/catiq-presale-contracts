@@ -21,23 +21,131 @@ Smart contract system for the **CatIQ** token and its **BNB-based public presale
 
 ---
 
+## Commands
+
+Run all commands from the project root. Copy `.env.example` to `.env` and fill in values before deploy or verify on a live network.
+
+### Install dependencies
+
+```shell
+npm install
+```
+
+### Compile contracts
+
+```shell
+npx hardhat compile
+```
+
+Force a clean rebuild:
+
+```shell
+npx hardhat clean && npx hardhat compile
+```
+
+### Run tests
+
+Run the full test suite:
+
+```shell
+npx hardhat test
+```
+
+Run a single test file:
+
+```shell
+npx hardhat test test/CatiQ.test.js
+npx hardhat test test/Presale.test.js
+```
+
+### Deploy
+
+**BSC Testnet**
+
+```shell
+npx hardhat run scripts/deploy-catiq.js --network bscTestnet
+```
+
+After deploy, set `CATIQ_ADDRESS` in `.env`, then:
+
+```shell
+npx hardhat run scripts/deploy-presale.js --network bscTestnet
+```
+
+**BSC Mainnet**
+
+```shell
+npx hardhat run scripts/deploy-catiq.js --network bscMainnet
+```
+
+After deploy, set `CATIQ_ADDRESS` in `.env`, then:
+
+```shell
+npx hardhat run scripts/deploy-presale.js --network bscMainnet
+```
+
+Each deploy script prints a **Verify with:** line at the end — copy and run that command after deployment.
+
+### Verify on BscScan
+
+Ensure `BSCSCAN_API_KEY` is set in `.env`.
+
+**Option A — use constructor-args files (recommended)**
+
+CatIQ:
+
+```shell
+npx hardhat verify --network bscTestnet <CATIQ_ADDRESS> --constructor-args scripts/args.js
+```
+
+Presale:
+
+```shell
+npx hardhat verify --network bscTestnet <PRESALE_ADDRESS> --constructor-args scripts/presale-args.js
+```
+
+Replace `bscTestnet` with `bscMainnet` for mainnet verification. Replace `<CATIQ_ADDRESS>` and `<PRESALE_ADDRESS>` with deployed contract addresses.
+
+**Option B — inline constructor arguments**
+
+CatIQ:
+
+```shell
+npx hardhat verify --network bscTestnet <CATIQ_ADDRESS> <PP_WALLET> <EXCHANGE_WALLET> <TREASURY_WALLET> <MARKETING_WALLET> <TEAM_WALLET> <DEV_WALLET>
+```
+
+Presale:
+
+```shell
+npx hardhat verify --network bscTestnet <PRESALE_ADDRESS> <CATIQ_ADDRESS> <BNB_USD_PRICE_FEED> "[<STAGE1>,<STAGE2>,<STAGE3>]" <START_TIME> <END_TIME> <TGE_TIME>
+```
+
+Example Presale values:
+
+```shell
+npx hardhat verify --network bscTestnet 0xPresaleAddress 0xCatIQAddress 0x2514895c72f50D8bd4B4F9b1110f0D6bD2c97526 "[1000000,2000000,3000000]" 1717200000 1719800000 1720400000
+```
+
+---
+
 ## Table of Contents
 
 1. [Features](#features)
-2. [Project Overview](#project-overview)
-3. [Architecture](#architecture)
-4. [Repository Structure](#repository-structure)
-5. [Tokenomics](#tokenomics)
-6. [Contract Responsibilities](#contract-responsibilities)
-7. [Presale Lifecycle](#presale-lifecycle)
-8. [Pricing & Oracle](#pricing--oracle)
-9. [Admin Controls](#admin-controls)
-10. [Deployment Order](#deployment-order)
-11. [Configuration](#configuration)
-12. [Networks](#networks)
-13. [Testing](#testing)
-14. [Operational Checklist](#operational-checklist)
-15. [Security Notes](#security-notes)
+2. [Commands](#commands)
+3. [Project Overview](#project-overview)
+4. [Architecture](#architecture)
+5. [Repository Structure](#repository-structure)
+6. [Tokenomics](#tokenomics)
+7. [Contract Responsibilities](#contract-responsibilities)
+8. [Presale Lifecycle](#presale-lifecycle)
+9. [Pricing & Oracle](#pricing--oracle)
+10. [Admin Controls](#admin-controls)
+11. [Deployment Order](#deployment-order)
+12. [Configuration](#configuration)
+13. [Networks](#networks)
+14. [Testing](#testing)
+15. [Operational Checklist](#operational-checklist)
+16. [Security Notes](#security-notes)
 
 ---
 
@@ -287,7 +395,7 @@ CatIQ owner (deployer) currently has no custom admin functions beyond standard O
 | 5 | Set `CATIQ_ADDRESS` in `.env` | Manual |
 | 6 | Deploy Presale | `npx hardhat run scripts/deploy-presale.js --network <network>` |
 | 7 | Transfer 250M (or planned sale amount) CIQ from PP wallet to Presale | Wallet / script |
-| 8 | Verify contracts on BscScan | Hardhat verify using `args.js` / `presale-args.js` |
+| 8 | Verify contracts on BscScan | See [Commands → Verify](#verify-on-bscscan) or use the command printed by deploy scripts |
 | 9 | Open sale at `startTime` | Automatic on-chain |
 
 **Networks configured in Hardhat:** `hardhat` (local), `bscTestnet` (chainId 97), `bscMainnet` (chainId 56)
@@ -380,11 +488,7 @@ Test suites cover:
 - Batch allocation blocked before sale end
 - Treasury-style allocation claimable at TGE
 
-Run all tests:
-
-```shell
-npx hardhat test
-```
+See [Commands → Run tests](#run-tests) for how to execute the suite.
 
 ---
 
